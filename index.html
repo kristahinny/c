@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Números</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 90%;
+            max-width: 300px;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid black;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .disabled {
+            background-color: #ddd;
+            pointer-events: none;
+        }
+        #selectedNumbers {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            background-color: #bbb;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Escolha até 15 números</h1>
+    
+    <table>
+        <tr>
+            <td onclick="selectNumber(this)">01</td>
+            <td onclick="selectNumber(this)">02</td>
+            <td onclick="selectNumber(this)">03</td>
+            <td onclick="selectNumber(this)">04</td>
+            <td onclick="selectNumber(this)">05</td>
+        </tr>
+        <tr>
+            <td onclick="selectNumber(this)">06</td>
+            <td onclick="selectNumber(this)">07</td>
+            <td onclick="selectNumber(this)">08</td>
+            <td onclick="selectNumber(this)">09</td>
+            <td onclick="selectNumber(this)">10</td>
+        </tr>
+        <tr>
+            <td onclick="selectNumber(this)">11</td>
+            <td onclick="selectNumber(this)">12</td>
+            <td onclick="selectNumber(this)">13</td>
+            <td onclick="selectNumber(this)">14</td>
+            <td onclick="selectNumber(this)">15</td>
+        </tr>
+        <tr>
+            <td onclick="selectNumber(this)">16</td>
+            <td onclick="selectNumber(this)">17</td>
+            <td onclick="selectNumber(this)">18</td>
+            <td onclick="selectNumber(this)">19</td>
+            <td onclick="selectNumber(this)">20</td>
+        </tr>
+        <tr>
+            <td onclick="selectNumber(this)">21</td>
+            <td onclick="selectNumber(this)">22</td>
+            <td onclick="selectNumber(this)">23</td>
+            <td onclick="selectNumber(this)">24</td>
+            <td onclick="selectNumber(this)">25</td>
+        </tr>
+    </table>
+
+    <h2>Números Selecionados: <span id="selectedNumbers"></span></h2>
+
+    <button id="copyButton" onclick="copyToClipboard()" disabled>Copiar Números</button>
+
+    <script>
+        let selectedNumbers = [];
+        const maxSelection = 15;
+
+        function selectNumber(cell) {
+            const number = cell.innerText;
+
+            // Verifica se o número já foi selecionado
+            if (selectedNumbers.includes(number)) {
+                selectedNumbers = selectedNumbers.filter(n => n !== number);
+                cell.classList.remove('selected');
+            } else if (selectedNumbers.length < maxSelection) {
+                selectedNumbers.push(number);
+                cell.classList.add('selected');
+            }
+
+            // Atualiza os números selecionados na interface
+            document.getElementById('selectedNumbers').innerText = selectedNumbers.join(', ');
+
+            // Habilita o botão de copiar se houver números selecionados
+            document.getElementById('copyButton').disabled = selectedNumbers.length === 0;
+
+            // Desabilita as células restantes quando o limite de 15 números for atingido
+            if (selectedNumbers.length === maxSelection) {
+                disableUnselectedCells();
+            } else {
+                enableAllCells();
+            }
+        }
+
+        // Desativa as células não selecionadas quando atingir o máximo de 15 números
+        function disableUnselectedCells() {
+            const cells = document.querySelectorAll('td');
+            cells.forEach(cell => {
+                if (!cell.classList.contains('selected')) {
+                    cell.classList.add('disabled');
+                }
+            });
+        }
+
+        // Habilita todas as células
+        function enableAllCells() {
+            const cells = document.querySelectorAll('td');
+            cells.forEach(cell => {
+                cell.classList.remove('disabled');
+            });
+        }
+
+        // Função para copiar os números selecionados para a área de transferência
+        function copyToClipboard() {
+            const selectedText = selectedNumbers.join(', ');
+            navigator.clipboard.writeText(selectedText).then(() => {
+                alert('Números copiados: ' + selectedText);
+            }).catch(err => {
+                console.error('Erro ao copiar: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
